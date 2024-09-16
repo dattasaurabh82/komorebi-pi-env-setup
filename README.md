@@ -6,10 +6,16 @@ When run from a client machine, it sshes into the PI, installs bunch of things, 
 
 ## Applied Persisant Changes
 
-- System Updates: Updates the apt cache, performs a full system upgrade and cleans up unnecessary packages.
-- Package Installation: Installs `tmux`, `neofetch`, `vim`, and `vlc`.
-- Desktop Customization: Sets the desktop background to black and hides all desktop icons (documents, trash, and mounted drives).
-- Panel Configuration: Configures the top panel to auto-hide when not in use. Sets the panel height and other visual properties.
+- Sets a custom ASCII art Message of the Day (MOTD)
+- Updates the apt cache
+- Enables the I2C interface in boot config
+- Loads the I2C kernel module
+- Hides the Raspberry Pi logo during boot and disables it on the top left corner
+- Installs required packages (git, tmux, neofetch, vim, vlc)
+- Sets the desktop background to black
+- Hides all desktop icons (documents, trash, mounts)
+- Ensures the LXDE panel configuration directory exists
+- Configures the panel to auto-hide
 
 ## Pre-requisites
 
