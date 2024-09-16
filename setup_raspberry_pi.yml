@@ -1,0 +1,98 @@
+- name: Setup and Update Raspberry Pi for "komorebi" with LXDE Customization
+  hosts: raspberry_pi_2_zero_w
+  become: 'yes'
+  tasks:
+    - name: Update apt cache (equivalent to apt-get update -y)
+      apt:
+        update_cache: 'yes'
+        force_apt_get: 'yes'
+
+    # - name: Upgrade all packages (equivalent to apt-get upgrade -y)
+    #   apt:
+    #     upgrade: full
+    #     force_apt_get: 'yes'
+    #     autoclean: 'yes'
+    #     autoremove: 'yes'
+
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - tmux
+          - neofetch
+          - vim
+          - vlc
+        state: present
+        force_apt_get: 'yes'
+
+    - name: Set desktop background to black
+      lineinfile:
+        path: /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
+        regexp: '^wallpaper='
+        line: 'wallpaper='
+
+    - name: Set desktop color to black
+      lineinfile:
+        path: /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
+        regexp: '^desktop_bg=#'
+        line: 'desktop_bg=#000000'
+
+    - name: Hide all desktop icons
+      blockinfile:
+        path: /etc/xdg/pcmanfm/LXDE-pi/desktop-items-0.conf
+        block: |
+          show_documents=0
+          show_trash=0
+          show_mounts=0
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - DESKTOP ICONS'
+
+    - name: Ensure .config/lxpanel/LXDE-pi/panels directory exists
+      file:
+        path: /home/pi/.config/lxpanel/LXDE-pi/panels
+        state: directory
+        owner: pi
+        group: pi
+        mode: '0755'
+
+    - name: Configure panel settings to auto-hide
+      blockinfile:
+        path: /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+        create: 'yes'
+        block: |
+          # lxpanel <profile> config file. Manually editing is not recommended.
+          # Use preference dialog in lxpanel to adjust config when you can.
+          Global {
+            edge=top
+            align=left
+            margin=0
+            widthtype=percent
+            width=100
+            height=36
+            transparent=0
+            tintcolor=#000000
+            alpha=0
+            autohide=1
+            heightwhenhidden=1
+            setdocktype=1
+            setpartialstrut=1
+            usefontcolor=0
+            fontsize=12
+            fontcolor=#ffffff
+            usefontsize=0
+            background=0
+            backgroundfile=/usr/share/lxpanel/images/background.png
+            iconsize=36
+            monitor=0
+            point_at_menu=0
+          }
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - PANEL SETTINGS'
+        owner: pi
+        group: pi
+        mode: '0644'
+
+    - name: Display installation complete message
+      debug:
+        msg: >-
+          Installation complete! System updated, LXDE customized with black
+          background, hidden panel, and all desktop icons hidden. Please reboot
+          to apply all changes.
