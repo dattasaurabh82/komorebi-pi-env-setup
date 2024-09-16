@@ -1,18 +1,52 @@
 - name: Setup and Update Raspberry Pi for "komorebi" with LXDE Customization
   hosts: raspberry_pi_2_zero_w
   become: 'yes'
+  vars:
+    motd_content: |
+       _  ______  __  __  ____  _____  ______ ____ _____ 
+       | |/ / __ \|  \/  |/ __ \|  __ \|  ____|  _ \_   _|
+       | ' / |  | | \  / | |  | | |__) | |__  | |_) || |  
+       |  <| |  | | |\/| | |  | |  _  /|  __| |  _ < | |  
+       | . \ |__| | |  | | |__| | | \ \| |____| |_) || |_ 
+       |_|\_\____/|_|  |_|\____/|_|  \_\______|____/_____|
+
+       Welcome Komorebi System
+       Saurabh Datta
+       2024                                             
+
   tasks:
     - name: Update apt cache (equivalent to apt-get update -y)
       apt:
         update_cache: 'yes'
         force_apt_get: 'yes'
 
-    # - name: Upgrade all packages (equivalent to apt-get upgrade -y)
-    #   apt:
-    #     upgrade: full
-    #     force_apt_get: 'yes'
-    #     autoclean: 'yes'
-    #     autoremove: 'yes'
+    - name: Enable I2C interface
+      lineinfile:
+        path: /boot/firmware/config.txt
+        line: "dtparam=i2c_arm=on"
+        regexp: '^dtparam=i2c_arm='
+        state: present
+    
+    - name: Load I2C kernel module
+      lineinfile:
+        path: /etc/modules
+        line: "i2c-dev"
+        state: present
+    
+    - name: Hide Raspberry Pi logo during boot and disable logo on top left corner
+      lineinfile:
+        path: /boot/firmware/cmdline.txt
+        regexp: '^(.*)$'
+        line: '\1 logo.nologo console_logo.enabled=0'
+        backrefs: yes
+        
+    - name: Set custom MOTD
+      copy:
+        content: "{{ motd_content }}"
+        dest: /etc/motd
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: Install required packages
       apt:
@@ -72,7 +106,7 @@
             tintcolor=#000000
             alpha=0
             autohide=1
-            heightwhenhidden=1
+            heightwhenhidden=0
             setdocktype=1
             setpartialstrut=1
             usefontcolor=0
