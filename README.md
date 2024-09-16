@@ -21,7 +21,13 @@ When run from a client machine, it sshes into the PI, installs bunch of things, 
   - Give it a suitable password
   - Enable Provide ssh key of the client development machine from which we will often shh into the pi or run the ansible notebooks from.
 - Before running the ansible notebook, goes unsaid, make sure that you have [ansible installed](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) on your development client machine.  
-- Make Sure to edit the [inventory.ini](inventory.ini) to match pi's host name and user name. For example, my pi's (the one I'm using for the komorebi project) user is pi and the hostname is.
+- Make Sure to edit the [inventory.ini](inventory.ini) to match pi's host name and user name. For example, my pi's (the one I'm using for the komorebi project) user is `pi` and the hostname is `komorebi.local` (see below).
+
+  ```ini
+  [raspberry_pi_2_zero_w]
+     komorebi ansible_host=komorebi.local ansible_user=pi
+  ```
+
 
 ## Post Installation
 
