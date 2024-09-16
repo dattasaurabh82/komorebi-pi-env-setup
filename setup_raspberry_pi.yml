@@ -127,6 +127,4 @@
     - name: Display installation complete message
       debug:
         msg: >-
-          Installation complete! System updated, LXDE customized with black
-          background, hidden panel, and all desktop icons hidden. Please reboot
-          to apply all changes.
+          System Configuration and Installation complete! 
