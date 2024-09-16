@@ -28,7 +28,6 @@ When run from a client machine, it sshes into the PI, installs bunch of things, 
      komorebi ansible_host=komorebi.local ansible_user=pi
   ```
 
-
 ## Post Installation
 
 ### Configure git
